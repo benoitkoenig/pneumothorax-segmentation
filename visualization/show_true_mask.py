@@ -4,11 +4,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sys
 
-from pneumothorax_segmentation.preprocess import get_dicom_data, get_true_mask
+from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask
 
 def show_true_mask(index):
-    dicom_data, filename = get_dicom_data("train", index) # True mask is only known for the training dataset
-    mask = get_true_mask(filename.replace(".dcm", ""))
+    images_list = get_all_images_list("train")
+
+    # Check index is valid
+    if index >= len(images_list):
+        print("Index %s out of range. Max index is %s" % (index, len(images_list) - 1))
+        exit(-1)
+
+    file_path, filename = images_list[index]
+    dicom_data = get_dicom_data(file_path) # True mask is only known for the training dataset
+    mask = get_true_mask(filename)
 
     if np.max(mask) == 0:
         print("No Pneumothorax on %s" % filename)

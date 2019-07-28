@@ -8,12 +8,21 @@ import tensorflow as tf
 tf.compat.v1.enable_eager_execution() # Remove when switching to tf2
 
 from pneumothorax_segmentation.data_augment import get_many_images_from_one
-from pneumothorax_segmentation.preprocess import get_dicom_data, get_true_mask
+from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask
 
 def show_data_augment(index):
-    dicom_data, filename = get_dicom_data("train", index) # True mask is only known for the training dataset
+    images_list = get_all_images_list("train")
+
+    # Check index is valid
+    if index >= len(images_list):
+        print("Index %s out of range. Max index is %s" % (index, len(images_list) - 1))
+        exit(-1)
+
+    file_path, filename = images_list[index]
+    dicom_data = get_dicom_data(file_path)
+
     image = np.array(dicom_data.pixel_array)
-    mask = get_true_mask(filename.replace(".dcm", ""))
+    mask = get_true_mask(filename)
 
     images, masks = get_many_images_from_one(image, mask)
 

@@ -7,32 +7,39 @@ from pneumothorax_segmentation.constants import image_size
 
 # Documentation for reading dicom files at https://pydicom.github.io/pydicom/stable/viewing_images.html#using-pydicom-with-matplotlib
 
-def get_dicom_data(folder, index):
+def get_all_images_list(folder):
     # Load all images filenames in folder
+    # Returns a list of (filepath, filename)
     all_images_in_folder = []
 
     for dirName, _, fileList in os.walk("./dicom-images-%s" % folder):
         for filename in fileList:
             if ".dcm" in filename.lower():
-                all_images_in_folder.append((os.path.join(dirName,filename), filename))
+                all_images_in_folder.append((os.path.join(dirName,filename), filename.replace(".dcm", "")))    
 
-    # Check index is valid
-    if index >= len(all_images_in_folder):
-        print("Index %s out of range. Max index is %s" % (index, len(all_images_in_folder) - 1))
-        exit(-1)
+    return all_images_in_folder
 
-    # Display the data and image through matplotlib
-    ds = pydicom.dcmread(all_images_in_folder[index][0])
-    return ds, all_images_in_folder[index][1]
+def get_dicom_data(file_path):
+    return pydicom.dcmread(file_path)
 
+cached_csv = []
 def get_true_mask(name):
+    # Warning side-effect: get_true_mask loads the csv on the first run and caches it
+    # Takes the name of the image as input and returns the mask mapping as a numpy matrix of shape (image_size, image_size) and values 0-1
+    global cached_csv
+
+    # The csv data is stored in a cache. This way, the csv is read only once
+    if (len(cached_csv) == 0):
+        with open('train-rle.csv') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            for row in csv_reader:
+                cached_csv.append(row)
+
     # Retrieve masks as they are in the csv
     raw_masks = []
-    with open('train-rle.csv') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        for row in csv_reader:
-            if row[0] == name:
-                raw_masks.append(row[1])
+    for row in cached_csv:
+        if row[0] == name:
+            raw_masks.append(row[1])
 
     # Remove the -1 from images with no mask
     if (raw_masks[0] == " -1"):
