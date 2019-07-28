@@ -1,6 +1,5 @@
 import pydicom
 import os
-import sys
 
 # Documentation for reading dicom files at https://pydicom.github.io/pydicom/stable/viewing_images.html#using-pydicom-with-matplotlib
 

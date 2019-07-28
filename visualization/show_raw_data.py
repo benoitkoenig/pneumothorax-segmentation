@@ -1,6 +1,4 @@
-import pydicom
 import matplotlib.pyplot as plt
-import os
 import sys
 
 from pneumothorax_segmentation.get_dicom_data import get_dicom_data
