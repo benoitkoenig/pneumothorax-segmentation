@@ -1,3 +1,4 @@
 dicom-images-test/
 dicom-images-train/
+tracking/data.csv
 weights/

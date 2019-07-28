@@ -7,6 +7,7 @@ tf.compat.v1.enable_eager_execution() # Remove when switching to tf2
 
 from pneumothorax_segmentation.constants import image_size, tf_image_size
 from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask
+from pneumothorax_segmentation.tracking import save_data
 from pneumothorax_segmentation.unet import Unet
 
 def get_tf_image_and_mask(filepath, filename):
@@ -34,6 +35,7 @@ def train():
         def get_loss():
             predicted_logits = unet(image)
             predicted_logits = tf.image.resize(predicted_logits, (image_size, image_size))
+            save_data(index, predicted_logits.numpy(), true_mask)
             return sparse_softmax_cross_entropy_with_logits(logits=predicted_logits, labels=true_mask)
 
         opt.minimize(get_loss, [unet.trainable_weights])
