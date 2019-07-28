@@ -4,32 +4,26 @@ import pandas as pd
 
 from pneumothorax_segmentation.constants import image_size
 from pneumothorax_segmentation.tracking.constants import columns, file_path
+from pneumothorax_segmentation.postprocess import build_predicted_mask
 
-def calculate_IoU(predicted_logits, labels):
+def calculate_IoU(predicted_mask, true_mask):
     "Calculates the IoU for tracking. This method will most likely be used somewhere else, so it has to be moved when it happens"
-    predictions = np.apply_along_axis(lambda l: np.argmax(l), axis=3, arr=predicted_logits)
-
-    intersection = np.sum(labels & predictions)
-    union = np.sum(labels | predictions)
+    intersection = np.sum(predicted_mask & true_mask)
+    union = np.sum(predicted_mask | true_mask)
 
     if union == 0:
         return 0.
 
     return intersection / union
 
-def calculate_predicted_area(predicted_logits):
-    "Calculates the area where the pneumothorax was predicted"
-    predictions = np.apply_along_axis(lambda l: np.argmax(l), axis=3, arr=predicted_logits)
-
-    return np.sum(predictions)
-
-def save_data(index, predicted_logits, labels):
-    "Saves IoUs of images with pneumothorax and wrong diagnosis area of images without. Predicted_logits must be a np matrix of shape (1, n, n, 2) and labels a np matrix of shape (1, n, n)"
-    if (np.max(labels) == 0): # No mask on this image
+def save_data(index, predicted_logits, true_mask):
+    "Saves IoUs of images with pneumothorax and wrong diagnosis area of images without. Predicted_mask must be a numpy matrix of shape (image_size, image_size). predicted_logits must be the direct output from the unet model"
+    predicted_mask = build_predicted_mask(predicted_logits)
+    if (np.max(true_mask) == 0): # No mask on this image
         IoU = None
-        wrong_diagnosis = calculate_predicted_area(predicted_logits)
+        wrong_diagnosis = np.sum(predicted_mask)
     else:
-        IoU = calculate_IoU(predicted_logits, labels)
+        IoU = calculate_IoU(predicted_mask, true_mask)
         wrong_diagnosis = None
 
     df = pd.DataFrame({

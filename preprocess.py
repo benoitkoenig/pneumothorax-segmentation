@@ -1,9 +1,10 @@
 import csv
 import numpy as np
-import pydicom
 import os
+import pydicom
+import tensorflow as tf
 
-from pneumothorax_segmentation.constants import image_size
+from pneumothorax_segmentation.constants import image_size, tf_image_size
 
 # Documentation for reading dicom files at https://pydicom.github.io/pydicom/stable/viewing_images.html#using-pydicom-with-matplotlib
 
@@ -68,3 +69,10 @@ def get_true_mask(name):
     mask_mapping = np.transpose(mask_mapping, (1, 0))
 
     return mask_mapping
+
+def format_pixel_array_for_unet(pixel_array):
+    "Inputs pixel_array as they are stroed in the dicom file. Outputs a tensor ready to go through the Unet model"
+    image = tf.convert_to_tensor(pixel_array, dtype=tf.float32)
+    image = tf.reshape(image, (1, image_size, image_size, 1))
+    image = tf.image.resize(image, (tf_image_size, tf_image_size))
+    return image

@@ -7,22 +7,9 @@ tf.compat.v1.enable_eager_execution() # Remove when switching to tf2
 
 from pneumothorax_segmentation.constants import image_size, tf_image_size
 from pneumothorax_segmentation.params import disease_pixel_weight, learning_rate
-from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask
+from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask, format_pixel_array_for_unet
 from pneumothorax_segmentation.tracking import save_data
 from pneumothorax_segmentation.unet import Unet
-
-def get_tf_image_and_mask(filepath, filename):
-    "Return the tensorflow image of shape (1, tf_image_size, tf_image_size, 1) and the numpy mask of shape (1, image_size, image_size)"
-    dicom_data = get_dicom_data(filepath)
-    true_mask = get_true_mask(filename)
-
-    image = tf.convert_to_tensor(dicom_data.pixel_array, dtype=tf.float32)
-    image = tf.reshape(image, (1, image_size, image_size, 1))
-    image = tf.image.resize(image, (tf_image_size, tf_image_size))
-
-    true_mask = np.reshape(true_mask, (1, image_size, image_size))
-
-    return image, true_mask
 
 def train():
     unet = Unet()
@@ -31,13 +18,19 @@ def train():
 
     images_list = get_all_images_list("train")
     for (index, (filepath, filename)) in enumerate(images_list):
-        image, true_mask = get_tf_image_and_mask(filepath, filename)
+        dicom_data = get_dicom_data(filepath)
+        true_mask = get_true_mask(filename)
+
+        image = format_pixel_array_for_unet(dicom_data.pixel_array)
+        true_mask = np.reshape(true_mask, (1, image_size, image_size))
 
         def get_loss():
             predicted_logits = unet(image)
-            predicted_logits = tf.image.resize(predicted_logits, (image_size, image_size))
-            save_data(index, predicted_logits.numpy(), true_mask)
-            pixel_loss = sparse_softmax_cross_entropy_with_logits(logits=predicted_logits, labels=true_mask)
+
+            save_data(index, predicted_logits, true_mask)
+
+            resized_predicted_logits = tf.image.resize(predicted_logits, (image_size, image_size))
+            pixel_loss = sparse_softmax_cross_entropy_with_logits(logits=resized_predicted_logits, labels=true_mask)
             pixel_loss = tf.multiply(disease_pixel_weight * true_mask, pixel_loss)
 
             return tf.reduce_sum(pixel_loss)
