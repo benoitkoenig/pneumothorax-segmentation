@@ -3,26 +3,15 @@ import matplotlib.pyplot as plt
 import os
 import sys
 
-# Documentation for reading dicom files at https://pydicom.github.io/pydicom/stable/viewing_images.html#using-pydicom-with-matplotlib
+from pneumothorax_segmentation.get_dicom_data import get_dicom_data
 
 def show_data(folder, index):
-    # Load all images filenames in folder
-    all_images_in_folder = []
-    for dirName, _, fileList in os.walk("./dicom-images-%s" % folder):
-        for filename in fileList:
-            if ".dcm" in filename.lower():
-                all_images_in_folder.append(os.path.join(dirName,filename))
-
-    # Check index is valid
-    if index >= len(all_images_in_folder):
-        print("Index %s out of range. Max index is %s" % (index, len(all_images_in_folder) - 1))
-        exit(-1)
+    dicom_data, filename = get_dicom_data(folder, index)
 
     # Display the data and image through matplotlib
-    ds = pydicom.dcmread(all_images_in_folder[index])
-    plt.imshow(ds.pixel_array)
-    print("File: %s" % all_images_in_folder[index])
-    print(ds)
+    plt.imshow(dicom_data.pixel_array)
+    print("File: %s" % filename)
+    print(dicom_data)
     plt.show()
 
 # Read arguments from python command
