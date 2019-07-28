@@ -6,6 +6,7 @@ from tensorflow.nn import sparse_softmax_cross_entropy_with_logits
 tf.compat.v1.enable_eager_execution() # Remove when switching to tf2
 
 from pneumothorax_segmentation.constants import image_size, tf_image_size
+from pneumothorax_segmentation.params import disease_pixel_weight, learning_rate
 from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask
 from pneumothorax_segmentation.tracking import save_data
 from pneumothorax_segmentation.unet import Unet
@@ -26,7 +27,7 @@ def get_tf_image_and_mask(filepath, filename):
 def train():
     unet = Unet()
     unet.load_weights("./weights/unet")
-    opt = Adam(learning_rate=1e-4)
+    opt = Adam(learning_rate=learning_rate)
 
     images_list = get_all_images_list("train")
     for (index, (filepath, filename)) in enumerate(images_list):
@@ -36,7 +37,10 @@ def train():
             predicted_logits = unet(image)
             predicted_logits = tf.image.resize(predicted_logits, (image_size, image_size))
             save_data(index, predicted_logits.numpy(), true_mask)
-            return sparse_softmax_cross_entropy_with_logits(logits=predicted_logits, labels=true_mask)
+            pixel_loss = sparse_softmax_cross_entropy_with_logits(logits=predicted_logits, labels=true_mask)
+            pixel_loss = tf.multiply(disease_pixel_weight * true_mask, pixel_loss)
+
+            return tf.reduce_sum(pixel_loss)
 
         opt.minimize(get_loss, [unet.trainable_weights])
 
