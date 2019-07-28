@@ -8,8 +8,7 @@ from pneumothorax_segmentation.constants import image_size
 # Documentation for reading dicom files at https://pydicom.github.io/pydicom/stable/viewing_images.html#using-pydicom-with-matplotlib
 
 def get_all_images_list(folder):
-    # Load all images filenames in folder
-    # Returns a list of (filepath, filename)
+    "Load all images filenames in folder. Returns a list of (filepath, filename)"
     all_images_in_folder = []
 
     for dirName, _, fileList in os.walk("./dicom-images-%s" % folder):
@@ -20,12 +19,13 @@ def get_all_images_list(folder):
     return all_images_in_folder
 
 def get_dicom_data(file_path):
+    "Return the dicom raw data of a given file"
     return pydicom.dcmread(file_path)
 
 cached_csv = []
 def get_true_mask(name):
-    # Warning side-effect: get_true_mask loads the csv on the first run and caches it
-    # Takes the name of the image as input and returns the mask mapping as a numpy matrix of shape (image_size, image_size) and values 0-1
+    "Takes the name of the image as input and returns the mask mapping as a numpy matrix of shape (image_size, image_size) and values 0-1"
+    # Warning hidden side effect: get-true-mask loads the csv on the first run and caches it
     global cached_csv
 
     # The csv data is stored in a cache. This way, the csv is read only once

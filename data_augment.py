@@ -6,9 +6,11 @@ from constants import image_size
 bigger_size = int(1.25 * image_size)
 
 def get_mirror_image(image):
+    "Takes a np matrix as input and flips it vertically"
     return np.flip(image, axis=1)
 
 def get_sized_image(input_image):
+    "Take an np matrix of shape (image_size, image_size as input and return a list of matrices of the same shape (original image included in the return)"
     image = np.reshape(input_image, (image_size, image_size, 1)) # Reshape needs to be done so tf resize is possible
     image = tf.convert_to_tensor(image) # I use tf methods for resizing, even though the output is still numpy
 
@@ -30,6 +32,7 @@ def get_sized_image(input_image):
     return [input_image, tall_image, large_image, big_image]
 
 def get_many_images_from_one(image, mask):
+    "Takes an image and a mask as np matrices of shape (image_size, image_size) and returns a list of matrices of the same shape, ready to use"
     mirror_image = np.flip(image, axis=1)
     mirror_mask = np.flip(mask, axis=1)
 
