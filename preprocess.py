@@ -54,7 +54,7 @@ def get_true_mask(name):
         masks.append(mask)
 
     # Use the masks to create the actual mapping of image_size * image_size
-    mask_mapping = np.zeros(image_size ** 2)
+    mask_mapping = np.zeros(image_size ** 2, dtype=np.int)
     for mask in masks:
         is_it_a_mask = False
         current_pixel = 0
