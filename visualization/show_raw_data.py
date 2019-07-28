@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import sys
 
-from pneumothorax_segmentation.get_dicom_data import get_dicom_data
+from pneumothorax_segmentation.preprocess import get_dicom_data
 
 def show_data(folder, index):
     dicom_data, filename = get_dicom_data(folder, index)
