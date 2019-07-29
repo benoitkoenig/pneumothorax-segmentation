@@ -32,5 +32,5 @@ def save_data(index, predicted_logits, true_mask):
     }, columns=columns)
     df.to_csv(file_path, mode="a", header=False, index=False)
 
-# def get_dataframes():
-#     return pd.read_csv(file_path)
+def get_dataframes():
+    return pd.read_csv(file_path)
