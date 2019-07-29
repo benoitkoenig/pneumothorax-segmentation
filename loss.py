@@ -11,6 +11,6 @@ def calculate_loss(predicted_logits, true_mask):
     reshaped_true_mask = np.reshape(true_mask, (1, image_size, image_size))
 
     pixel_loss = sparse_softmax_cross_entropy_with_logits(logits=resized_predicted_logits, labels=reshaped_true_mask)
-    pixel_loss = tf.multiply(disease_pixel_weight * reshaped_true_mask, pixel_loss)
+    pixel_loss = tf.multiply(disease_pixel_weight * reshaped_true_mask + 1, pixel_loss)
 
     return tf.reduce_sum(pixel_loss)
