@@ -40,7 +40,8 @@ def show_prediction(folder, index):
     image = format_pixel_array_for_unet(dicom_data.pixel_array)
     predicted_logits = unet(image)
     predictions = build_predicted_mask(predicted_logits)
-    plt.imshow(predictions)
+    pixels = 255 - (255 - pixels) * (1 - predictions)
+    plt.imshow(pixels)
 
     plt.show()
 
