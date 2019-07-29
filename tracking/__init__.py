@@ -19,18 +19,16 @@ def calculate_IoU(predicted_mask, true_mask):
 def save_data(index, predicted_logits, true_mask):
     "Saves IoUs of images with pneumothorax and wrong diagnosis area of images without. Predicted_mask must be a numpy matrix of shape (image_size, image_size). predicted_logits must be the direct output from the unet model"
     predicted_mask = build_predicted_mask(predicted_logits)
-    if (np.max(true_mask) == 0): # No mask on this image
-        IoU = None
-        wrong_diagnosis = np.sum(predicted_mask)
-    else:
+    IoU = None
+    if (np.max(true_mask) == 1): # If this image has a ground truth mask
         IoU = calculate_IoU(predicted_mask, true_mask)
-        wrong_diagnosis = None
+    prediction_area = np.sum(predicted_mask)
 
     df = pd.DataFrame({
         "datetime": [datetime.datetime.now()],
         "index": [index],
         "IoU": [IoU],
-        "wrong_diagnosis": [wrong_diagnosis],
+        "prediction_area": [prediction_area],
     }, columns=columns)
     df.to_csv(file_path, mode="a", header=False, index=False)
 
