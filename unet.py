@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow.keras import Model
-from tensorflow.keras.layers import Concatenate, Conv2D, Dropout, MaxPool2D, UpSampling2D
+from tensorflow.keras.layers import Concatenate, Conv2D, MaxPool2D, UpSampling2D
 
 class Unet(Model):
     "Unet model"
@@ -25,7 +25,6 @@ class Unet(Model):
         self.pool5 = MaxPool2D((2, 2))
         self.conv5a = Conv2D(1024, kernel_size=(3, 3), activation="relu", padding="same", kernel_initializer="he_normal")
         self.conv5b = Conv2D(1024, kernel_size=(3, 3), activation="relu", padding="same", kernel_initializer="he_normal")
-        self.drop5 = Dropout(.5)
 
         self.up6 = UpSampling2D((2, 2))
         self.concat6 = Concatenate(axis=3)
@@ -68,7 +67,6 @@ class Unet(Model):
         x5 = self.pool5(x4)
         x5 = self.conv5a(x5)
         x5 = self.conv5b(x5)
-        x5 = self.drop5(x5)
 
         x6 = self.up6(x5)
         x6 = self.concat6([x4, x6])
