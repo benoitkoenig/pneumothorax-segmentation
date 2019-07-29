@@ -75,4 +75,5 @@ def format_pixel_array_for_unet(pixel_array):
     image = tf.convert_to_tensor(pixel_array, dtype=tf.float32)
     image = tf.reshape(image, (1, image_size, image_size, 1))
     image = tf.image.resize(image, (tf_image_size, tf_image_size))
+    image = image / 255.
     return image
