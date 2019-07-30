@@ -12,7 +12,7 @@ def get_all_images_list(folder):
     "Load all images filenames in folder. Returns a list of (filepath, filename)"
     all_images_in_folder = []
 
-    for dirName, _, fileList in os.walk("./dicom-images-%s" % folder):
+    for dirName, _, fileList in os.walk("./data/dicom-images-%s" % folder):
         for filename in fileList:
             if ".dcm" in filename.lower():
                 all_images_in_folder.append((os.path.join(dirName,filename), filename.replace(".dcm", "")))    
@@ -31,7 +31,7 @@ def get_true_mask(name):
 
     # The csv data is stored in a cache. This way, the csv is read only once
     if (len(cached_csv) == 0):
-        with open('train-rle.csv') as csv_file:
+        with open('data/train-rle.csv') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             for row in csv_reader:
                 cached_csv.append(row)
@@ -70,8 +70,8 @@ def get_true_mask(name):
 
     return mask_mapping
 
-def format_pixel_array_for_unet(pixel_array):
-    "Inputs pixel_array as they are stroed in the dicom file. Outputs a tensor ready to go through the Unet model"
+def format_pixel_array_for_tf(pixel_array):
+    "Inputs pixel_array as they are stroed in the dicom file. Outputs a tensor ready to go through the models"
     image = tf.convert_to_tensor(pixel_array, dtype=tf.float32)
     image = tf.reshape(image, (1, image_size, image_size, 1))
     image = tf.image.resize(image, (tf_image_size, tf_image_size))

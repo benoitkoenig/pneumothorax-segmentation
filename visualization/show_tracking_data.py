@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from pneumothorax_segmentation.tracking import get_dataframes
+from pneumothorax_segmentation.tracking import get_segmentation_dataframes
 
 pd.plotting.register_matplotlib_converters()
 
@@ -9,7 +9,7 @@ pd.plotting.register_matplotlib_converters()
 # Initializing dataframes and variables #
 #########################################
 
-df = get_dataframes()
+df = get_segmentation_dataframes()
 nb_rows = df["index"].count()
 print("Dataframe size: {}".format(nb_rows))
 

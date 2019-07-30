@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 from pneumothorax_segmentation.constants import image_size
-from pneumothorax_segmentation.tracking.constants import columns, file_path
+from pneumothorax_segmentation.tracking.constants import columns, segmentation_file_path
 from pneumothorax_segmentation.postprocess import build_predicted_mask
 
 def calculate_IoU(predicted_mask, true_mask):
@@ -16,7 +16,7 @@ def calculate_IoU(predicted_mask, true_mask):
 
     return intersection / union
 
-def save_data(index, predicted_logits, true_mask):
+def save_segmentation_data(index, predicted_logits, true_mask):
     "Saves IoUs of images with pneumothorax and wrong diagnosis area of images without. Predicted_mask must be a numpy matrix of shape (image_size, image_size). predicted_logits must be the direct output from the unet model"
     predicted_mask = build_predicted_mask(predicted_logits)
     IoU = None
@@ -30,7 +30,7 @@ def save_data(index, predicted_logits, true_mask):
         "IoU": [IoU],
         "prediction_area": [prediction_area],
     }, columns=columns)
-    df.to_csv(file_path, mode="a", header=False, index=False)
+    df.to_csv(segmentation_file_path, mode="a", header=False, index=False)
 
-def get_dataframes():
-    return pd.read_csv(file_path)
+def get_segmentation_dataframes():
+    return pd.read_csv(segmentation_file_path)
