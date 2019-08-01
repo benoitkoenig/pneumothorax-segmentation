@@ -7,7 +7,7 @@ import tensorflow as tf
 
 tf.compat.v1.enable_eager_execution() # Remove when switching to tf2
 
-from pneumothorax_segmentation.constants import image_size, tf_image_size
+from pneumothorax_segmentation.constants import image_size, tf_image_size, folder_path
 from pneumothorax_segmentation.postprocess import build_predicted_mask
 from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask, format_pixel_array_for_tf
 from pneumothorax_segmentation.segmentation.unet import Unet
@@ -36,7 +36,7 @@ def show_prediction(folder, index):
 
     plt.subplot(1, 2, 2)
     unet = Unet()
-    unet.load_weights("./weights/unet")
+    unet.load_weights(folder_path + "/weights/unet")
     image = format_pixel_array_for_tf(dicom_data.pixel_array)
     predicted_logits = unet(image)
     predictions = build_predicted_mask(predicted_logits)

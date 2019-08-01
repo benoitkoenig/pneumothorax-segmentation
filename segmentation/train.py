@@ -4,7 +4,7 @@ from tensorflow.keras.optimizers import Adam
 
 tf.compat.v1.enable_eager_execution() # Remove when switching to tf2
 
-from pneumothorax_segmentation.constants import image_size
+from pneumothorax_segmentation.constants import image_size, folder_path
 from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask, format_pixel_array_for_tf
 from pneumothorax_segmentation.segmentation.loss import calculate_loss
 from pneumothorax_segmentation.segmentation.params import learning_rate
@@ -13,7 +13,7 @@ from pneumothorax_segmentation.tracking import save_segmentation_data
 
 def train():
     unet = Unet()
-    unet.load_weights("./weights/unet")
+    unet.load_weights(folder_path + "/weights/unet")
     opt = Adam(learning_rate=learning_rate)
 
     images_list = get_all_images_list("train")
@@ -29,11 +29,10 @@ def train():
 
         opt.minimize(get_loss, [unet.trainable_weights])
 
-        # if index % 100 == 99:
-        #     unet.save_weights("./weights/unet")
-        unet.save_weights("./weights/unet")
+        if index % 100 == 99:
+            unet.save_weights(folder_path + "/weights/unet")
 
     print("Training done over %s images. Saving final weights" % len(images_list))
-    unet.save_weights("./weights/unet")
+    unet.save_weights(folder_path + "/weights/unet")
 
 train()

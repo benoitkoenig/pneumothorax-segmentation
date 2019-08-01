@@ -3,7 +3,7 @@ import tensorflow as tf
 
 tf.compat.v1.enable_eager_execution() # Remove when switching to tf2
 
-from pneumothorax_segmentation.constants import tf_image_size
+from pneumothorax_segmentation.constants import tf_image_size, folder_path
 from pneumothorax_segmentation.classification.classifier import Classifier
 
 def reset_weights():
@@ -14,6 +14,6 @@ def reset_weights():
 
     _ = classifier(random_image)
 
-    classifier.save_weights("./weights/classifier")
+    classifier.save_weights(folder_path + "/weights/classifier")
 
 reset_weights()

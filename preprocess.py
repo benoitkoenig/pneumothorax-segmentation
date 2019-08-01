@@ -4,7 +4,7 @@ import os
 import pydicom
 import tensorflow as tf
 
-from pneumothorax_segmentation.constants import image_size, tf_image_size
+from pneumothorax_segmentation.constants import image_size, tf_image_size, folder_path
 
 # Documentation for reading dicom files at https://pydicom.github.io/pydicom/stable/viewing_images.html#using-pydicom-with-matplotlib
 
@@ -12,7 +12,7 @@ def get_all_images_list(folder):
     "Load all images filenames in folder. Returns a list of (filepath, filename)"
     all_images_in_folder = []
 
-    for dirName, _, fileList in os.walk("./data/dicom-images-%s" % folder):
+    for dirName, _, fileList in os.walk(folder_path + "/data/dicom-images-%s" % folder):
         for filename in fileList:
             if ".dcm" in filename.lower():
                 all_images_in_folder.append((os.path.join(dirName,filename), filename.replace(".dcm", "")))    
