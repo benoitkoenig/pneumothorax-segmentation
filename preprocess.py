@@ -31,7 +31,7 @@ def get_true_mask(name):
 
     # The csv data is stored in a cache. This way, the csv is read only once
     if (len(cached_csv) == 0):
-        with open('data/train-rle.csv') as csv_file:
+        with open(folder_path + '/data/train-rle.csv') as csv_file:
             csv_reader = csv.reader(csv_file, delimiter=',')
             for row in csv_reader:
                 cached_csv.append(row)
