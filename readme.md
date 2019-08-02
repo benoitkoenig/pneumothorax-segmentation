@@ -21,3 +21,8 @@ Author: Benoît Koenig
 - Show ground truth mask: python -m visualization.show_true_mask [index]
 
 - Show tracking data visualization: python -m visualization.show_tracking_data
+
+
+#### Note
+
+tensorflow-gpu is not included in requirements.txt as it is not always relevant. To use the GPU, install tensorflow-gpu via "pip install tensorflow-gpu"
