@@ -10,7 +10,7 @@ Author: Benoît Koenig
 
 - Randomly reseting the model's weights: python -m reset_weights
 
-- Clear tracking: python -m tracking.clear
+- Clear all tracking data: python -m tracking.clear
 
 - Check data augmentation: python -m visualization.show_data_augment [index]
 
@@ -21,7 +21,6 @@ Author: Benoît Koenig
 - Show ground truth mask: python -m visualization.show_true_mask [index]
 
 - Show tracking data for segmentation training: python -m visualization.show_tracking_seg
-
 
 #### Note
 

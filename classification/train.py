@@ -9,6 +9,7 @@ from pneumothorax_segmentation.constants import folder_path
 from pneumothorax_segmentation.classification.classifier import Classifier
 from pneumothorax_segmentation.classification.params import learning_rate
 from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask, format_pixel_array_for_tf
+from pneumothorax_segmentation.tracking import save_classification_data
 
 def train():
     classifier = Classifier()
@@ -24,7 +25,7 @@ def train():
 
         def get_loss():
             logits = classifier(image)
-            print(index, is_there_pneumothorax, logits.numpy()[0])
+            save_classification_data(index, is_there_pneumothorax, tf.nn.softmax(logits).numpy()[0])
             return sparse_softmax_cross_entropy_with_logits(logits=logits, labels=[is_there_pneumothorax])
 
         opt.minimize(get_loss, [classifier.trainable_weights])

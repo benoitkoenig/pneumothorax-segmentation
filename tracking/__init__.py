@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 from pneumothorax_segmentation.constants import image_size
-from pneumothorax_segmentation.tracking.constants import columns, segmentation_file_path
+from pneumothorax_segmentation.tracking.constants import segmentation_columns, segmentation_file_path, classification_columns, classification_file_path
 from pneumothorax_segmentation.postprocess import build_predicted_mask
 
 def calculate_IoU(predicted_mask, true_mask):
@@ -29,8 +29,18 @@ def save_segmentation_data(index, predicted_logits, true_mask):
         "index": [index],
         "IoU": [IoU],
         "prediction_area": [prediction_area],
-    }, columns=columns)
+    }, columns=segmentation_columns)
     df.to_csv(segmentation_file_path, mode="a", header=False, index=False)
+
+def save_classification_data(index, is_there_pneumothorax, probs):
+    "Saves probabilities for predicting pneumothorax in a picture"
+    df = pd.DataFrame({
+        "datetime": [datetime.datetime.now()],
+        "index": [index],
+        "is_there_pneumothorax": [is_there_pneumothorax],
+        "probs": [probs],
+    }, columns=classification_columns)
+    df.to_csv(classification_file_path, mode="a", header=False, index=False)
 
 def get_segmentation_dataframes():
     return pd.read_csv(segmentation_file_path)
