@@ -25,7 +25,7 @@ def train():
 
         def get_loss():
             logits = classifier(image)
-            save_classification_data(index, is_there_pneumothorax, tf.nn.softmax(logits).numpy()[0])
+            save_classification_data(index, is_there_pneumothorax, tf.nn.softmax(logits).numpy().tolist()[0])
             return sparse_softmax_cross_entropy_with_logits(logits=logits, labels=[is_there_pneumothorax])
 
         opt.minimize(get_loss, [classifier.trainable_weights])

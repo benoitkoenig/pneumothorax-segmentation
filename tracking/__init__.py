@@ -44,3 +44,6 @@ def save_classification_data(index, is_there_pneumothorax, probs):
 
 def get_segmentation_dataframes():
     return pd.read_csv(segmentation_file_path)
+
+def get_classification_dataframes():
+    return pd.read_csv(classification_file_path)
