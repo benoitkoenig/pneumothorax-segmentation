@@ -20,7 +20,7 @@ Author: Benoît Koenig
 
 - Show ground truth mask: python -m visualization.show_true_mask [index]
 
-- Show tracking data visualization: python -m visualization.show_tracking_data
+- Show tracking data for segmentation training: python -m visualization.show_tracking_seg
 
 
 #### Note
