@@ -1,34 +1,28 @@
 import tensorflow as tf
-from tensorflow.keras.optimizers import Adam
 
-tf.compat.v1.enable_eager_execution() # Remove when switching to tf2
-
-from pneumothorax_segmentation.constants import folder_path
+from pneumothorax_segmentation.constants import image_size, folder_path
 from pneumothorax_segmentation.segmentation.loss import calculate_loss
-from pneumothorax_segmentation.segmentation.params import learning_rate
-from pneumothorax_segmentation.segmentation.unet import Unet
-from pneumothorax_segmentation.segmentation.training_generator import training_generator
-from pneumothorax_segmentation.tracking import save_segmentation_data
+from pneumothorax_segmentation.segmentation.params import learning_rate, steps_per_epoch, epochs
+from pneumothorax_segmentation.segmentation.training_generator import training_generator, generator_length
+from pneumothorax_segmentation.segmentation.unet import build_unet
+# from pneumothorax_segmentation.tracking import save_segmentation_data
+
+graph = tf.compat.v1.get_default_graph()
 
 def train():
-    unet = Unet()
-    unet.load_weights(folder_path + "/weights/unet")
-    opt = Adam(learning_rate=learning_rate)
+    unet = build_unet()
+    unet.compile(
+        optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate),
+        loss=calculate_loss,
+        target_tensors=tf.compat.v1.placeholder(tf.int32, shape=(1, image_size, image_size)),
+    )
 
-    index = 0
-    for (image, true_mask) in training_generator():
-        def get_loss():
-            predicted_logits = unet(image)
-            save_segmentation_data(index, predicted_logits, true_mask)
-            return calculate_loss(predicted_logits, true_mask)
+    model_checkpoint = tf.keras.callbacks.ModelCheckpoint(folder_path + "/weights/unet.hdf5")
 
-        opt.minimize(get_loss, [unet.trainable_weights])
+    if (generator_length != steps_per_epoch * epochs):
+        print("\n Warning: The generator's length is different from steps_per_epoch * epochs: %s != %s * %s" % (generator_length, steps_per_epoch, epochs))
 
-        index += 1
-        if index % 100 == 99:
-            unet.save_weights(folder_path + "/weights/unet")
-
-    print("Training done over %s images. Saving final weights" % index)
-    unet.save_weights(folder_path + "/weights/unet")
+    gen = training_generator(graph)
+    unet.fit(gen, steps_per_epoch=steps_per_epoch, epochs=epochs, callbacks=[model_checkpoint])
 
 train()
