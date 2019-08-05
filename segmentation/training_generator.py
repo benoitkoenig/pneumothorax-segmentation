@@ -15,9 +15,9 @@ def training_generator(graph):
     """
     for (filepath, filename) in images_list:
         with graph.as_default():
-                dicom_data = get_dicom_data(filepath)
-                image = format_pixel_array_for_tf(dicom_data.pixel_array)
-                true_mask = get_true_mask(filename)
-                true_mask = tf.convert_to_tensor(true_mask, dtype=tf.int32)
-                true_mask = tf.reshape(true_mask, (1, image_size, image_size))
+            dicom_data = get_dicom_data(filepath)
+            image = format_pixel_array_for_tf(dicom_data.pixel_array)
+            true_mask = get_true_mask(filename)
+            true_mask = tf.convert_to_tensor(true_mask, dtype=tf.int32)
+            true_mask = tf.reshape(true_mask, (1, image_size, image_size))
         yield (image, true_mask)

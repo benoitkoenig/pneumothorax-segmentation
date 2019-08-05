@@ -9,18 +9,18 @@ from pneumothorax_segmentation.segmentation.unet import build_unet
 
 graph = tf.compat.v1.get_default_graph()
 
+if (generator_length != steps_per_epoch * epochs):
+    print("\n Warning: The generator's length is different from steps_per_epoch * epochs: %s != %s * %s" % (generator_length, steps_per_epoch, epochs))
+
 def train():
     unet = build_unet()
     unet.compile(
-        optimizer = tf.keras.optimizers.Adam(learning_rate=learning_rate),
+        optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
         loss=calculate_loss,
         target_tensors=tf.compat.v1.placeholder(tf.int32, shape=(1, image_size, image_size)),
     )
 
     model_checkpoint = tf.keras.callbacks.ModelCheckpoint(folder_path + "/weights/unet.hdf5")
-
-    if (generator_length != steps_per_epoch * epochs):
-        print("\n Warning: The generator's length is different from steps_per_epoch * epochs: %s != %s * %s" % (generator_length, steps_per_epoch, epochs))
 
     gen = training_generator(graph)
     unet.fit(gen, steps_per_epoch=steps_per_epoch, epochs=epochs, callbacks=[model_checkpoint])
