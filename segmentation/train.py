@@ -23,6 +23,6 @@ def train():
     model_checkpoint = tf.keras.callbacks.ModelCheckpoint(folder_path + "/weights/unet.hdf5")
 
     gen = training_generator(graph)
-    unet.fit(gen, steps_per_epoch=steps_per_epoch, epochs=epochs, callbacks=[model_checkpoint])
+    unet.fit_generator(gen, steps_per_epoch=steps_per_epoch, epochs=epochs, callbacks=[model_checkpoint])
 
 train()
