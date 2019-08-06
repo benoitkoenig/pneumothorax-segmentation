@@ -2,4 +2,5 @@ matplotlib
 numpy
 pandas
 pydicom
+segmentation_models
 tensorflow
