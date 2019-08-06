@@ -18,7 +18,7 @@ def get_dice_loss(true_mask, predicted_logits):
     predictions = 2 * predicted_logits - 1
 
     intersection = labels * predictions
-    sum_of_each = K.square(true_mask) + K.square(predictions)
+    sum_of_each = K.square(labels) + K.square(predictions)
 
     intersection = true_mask * mask_factor * intersection + (1 - true_mask) * non_mask_factor * intersection
     sum_of_each = true_mask * mask_factor * sum_of_each + (1 - true_mask) * non_mask_factor * sum_of_each
