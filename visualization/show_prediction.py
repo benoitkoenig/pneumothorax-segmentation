@@ -5,8 +5,6 @@ import numpy as np
 import sys
 import tensorflow as tf
 
-tf.compat.v1.enable_eager_execution() # Remove when switching to tf2
-
 from pneumothorax_segmentation.constants import image_size, tf_image_size, folder_path
 from pneumothorax_segmentation.postprocess import build_predicted_mask
 from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask, format_pixel_array_for_tf

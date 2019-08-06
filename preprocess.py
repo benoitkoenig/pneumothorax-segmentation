@@ -76,4 +76,5 @@ def format_pixel_array_for_tf(pixel_array):
     image = tf.reshape(image, (1, image_size, image_size, 1))
     image = tf.image.resize(image, (tf_image_size, tf_image_size))
     image = image / 255.
+    image = tf.image.grayscale_to_rgb(image)
     return image
