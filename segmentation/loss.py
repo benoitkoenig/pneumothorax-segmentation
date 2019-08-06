@@ -4,8 +4,30 @@ import tensorflow as tf
 from pneumothorax_segmentation.constants import image_size
 from pneumothorax_segmentation.segmentation.params import mask_factor, non_mask_factor
 
+# Different loss functions available, gotta test and use the most efficient one
+
 def get_bce_loss(true_mask, predicted_logits):
-    resized_predicted_logits = tf.image.resize(predicted_logits, (image_size, image_size))
-    loss = K.binary_crossentropy(true_mask, resized_predicted_logits)
+    "Calculates the weighted bce loss"
+    loss = K.binary_crossentropy(true_mask, predicted_logits)
     loss = mask_factor * K.mean(true_mask * loss) + non_mask_factor * K.mean((1 - true_mask) * loss)
     return loss
+
+def get_dice_loss(true_mask, predicted_logits):
+    "Calculates the weighted dice loss"
+    labels = 2 * true_mask - 1
+    predictions = 2 * predicted_logits - 1
+
+    intersection = labels * predictions
+    sum_of_each = K.square(true_mask) + K.square(predictions)
+
+    intersection = true_mask * mask_factor * intersection + (1 - true_mask) * non_mask_factor * intersection
+    sum_of_each = true_mask * mask_factor * sum_of_each + (1 - true_mask) * non_mask_factor * sum_of_each
+
+    loss = 1 - 2 * K.sum(intersection) / (K.sum(sum_of_each) + K.epsilon())
+
+    return loss
+
+def calculate_loss(true_mask, predicted_logits):
+    "Calculates the loss. true_mask and predicted_logits are expected to have the same shapes, with values between 0 and 1"
+    resized_predicted_logits = tf.image.resize(predicted_logits, (image_size, image_size))
+    return get_dice_loss(true_mask, resized_predicted_logits)

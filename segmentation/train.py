@@ -4,7 +4,7 @@ from segmentation_models import Unet
 import tensorflow as tf
 
 from pneumothorax_segmentation.constants import folder_path, image_size, tf_image_size
-from pneumothorax_segmentation.segmentation.loss import get_bce_loss
+from pneumothorax_segmentation.segmentation.loss import calculate_loss
 from pneumothorax_segmentation.segmentation.params import learning_rate, steps_per_epoch, epochs
 from pneumothorax_segmentation.segmentation.training_generator import training_generator, generator_length
 
@@ -21,7 +21,7 @@ def train():
         activation="sigmoid",
         input_shape=(tf_image_size, tf_image_size, 3),
     )
-    unet.compile(optimizer=Adam(lr=learning_rate), loss=get_bce_loss)
+    unet.compile(optimizer=Adam(lr=learning_rate), loss=calculate_loss)
 
     model_checkpoint = ModelCheckpoint(folder_path + "/weights/unet.hdf5")
 
