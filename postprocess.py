@@ -23,8 +23,7 @@ def export_mask_to_kaggle_format(input_mask):
     current_chunk_length = 0
     current_value = 0
     output = []
-    while(len(mask) != 0):
-        val = mask.pop(0)
+    for val in mask:
         if (val != current_value):
             output.append(current_chunk_length)
             current_chunk_length = 1
@@ -39,5 +38,5 @@ def export_mask_to_kaggle_format(input_mask):
         output = "-1"
     else:
         output = [str(o) for o in output]
-        output = ", ".join(output)
+        output = " ".join(output)
     return output

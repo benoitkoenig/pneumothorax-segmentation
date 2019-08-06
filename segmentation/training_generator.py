@@ -10,7 +10,7 @@ generator_length = len(images_list)
 
 def training_generator(graph):
     """
-    Yields a tuple (image, true_mask). Image is a tensor of shape (1, tf_image_size, tf_image_size, 1) and true_mask is a tuple of shape (1, image_size, image_size)\n
+    Yields a tuple (image, true_mask). Image is a tensor of shape (1, tf_image_size, tf_image_size, 3) and true_mask is a tuple of shape (1, image_size, image_size)\n
     Due to the way generators work, it is required to specify the graph to work on 
     """
     for (filepath, filename) in images_list:

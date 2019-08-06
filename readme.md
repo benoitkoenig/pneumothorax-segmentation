@@ -8,6 +8,8 @@ Author: Benoît Koenig
 
 - Training the model: python -m segmentation.train
 
+- Exporting final predictions to results.csv: python -m export_predictions
+
 - Check data augmentation: python -m visualization.show_data_augment [index]
 
 - Visualize prediction: python -m visualization.show_prediction [train|test] [index]
