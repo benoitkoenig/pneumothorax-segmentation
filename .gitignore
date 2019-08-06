@@ -1,5 +1,4 @@
 data/
-tracking/data/
 weights/
 __pycache__
 *.pyc

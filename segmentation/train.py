@@ -7,7 +7,6 @@ from pneumothorax_segmentation.constants import folder_path, image_size, tf_imag
 from pneumothorax_segmentation.segmentation.loss import calculate_loss
 from pneumothorax_segmentation.segmentation.params import learning_rate, steps_per_epoch, epochs
 from pneumothorax_segmentation.segmentation.training_generator import training_generator, generator_length
-# from pneumothorax_segmentation.tracking import save_segmentation_data
 
 graph = tf.compat.v1.get_default_graph()
 
