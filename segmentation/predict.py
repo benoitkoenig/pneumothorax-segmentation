@@ -6,8 +6,8 @@ from pneumothorax_segmentation.constants import folder_path, tf_image_size
 unet = Unet(
     'resnet34',
     encoder_weights='imagenet',
-    classes=2,
-    activation="linear",
+    classes=1,
+    activation="sigmoid",
     input_shape=(tf_image_size, tf_image_size, 3),
 )
 unet.load_weights(folder_path + "/weights/unet.hdf5")
