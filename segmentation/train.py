@@ -20,7 +20,7 @@ def train():
         encoder_weights='imagenet',
         classes=2,
         activation="linear",
-        input_shape=(tf_image_size, tf_image_size, 3),
+        input_shape=(image_size, image_size, 3),
     )
     unet.compile(
         optimizer=Adam(lr=learning_rate),
