@@ -1,5 +1,5 @@
-import keras.backend as K
 import tensorflow as tf
+import tensorflow.keras.backend as K
 
 from pneumothorax_segmentation.constants import image_size
 from pneumothorax_segmentation.segmentation.params import mask_factor, non_mask_factor
