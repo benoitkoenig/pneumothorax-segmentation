@@ -6,7 +6,9 @@ Author: Benoît Koenig
 
 ### Usage:
 
-- Training the model: python -m segmentation.train
+- Training the segmentation model: python -m segmentation.train
+
+- Training the hydra classifier's body: python -m hydra_classifier.train_hydra_body [resnet50|densenet169]
 
 - Exporting final predictions to results.csv: python -m export_predictions
 
