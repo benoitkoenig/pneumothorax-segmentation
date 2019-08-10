@@ -15,8 +15,8 @@ if (generator_length != steps_per_epoch * epochs):
 
 def train():
     unet = Unet(
-        'resnet34',
-        encoder_weights='imagenet',
+        "resnet34",
+        encoder_weights="imagenet",
         classes=1,
         activation="sigmoid",
         input_shape=(tf_image_size, tf_image_size, 3),
