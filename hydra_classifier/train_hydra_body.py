@@ -5,7 +5,7 @@ import tensorflow as tf
 
 from pneumothorax_segmentation.constants import folder_path
 from pneumothorax_segmentation.hydra_classifier.get_classifier import get_classifier
-from pneumothorax_segmentation.hydra_classifier.params import learning_rate, steps_per_epoch, epochs
+from pneumothorax_segmentation.hydra_classifier.params import learning_rate, steps_per_epoch_body, epochs_body
 from pneumothorax_segmentation.hydra_classifier.training_generator import training_generator
 
 # Hydra: an Ensemble of Convolutional NeuralNetworks for Geospatial Land Classification: https://arxiv.org/pdf/1802.03518.pdf
@@ -19,7 +19,7 @@ def train_hydra_body(backbone_name):
     model_checkpoint = ModelCheckpoint(folder_path + "/weights/hydra_%s_body.hdf5" % backbone_name)
 
     gen = training_generator(graph)
-    model.fit_generator(gen, steps_per_epoch=steps_per_epoch, epochs=epochs, callbacks=[model_checkpoint])
+    model.fit_generator(gen, steps_per_epoch=steps_per_epoch_body, epochs=epochs_body, callbacks=[model_checkpoint])
 
 # Read arguments from python command
 backbone_name = None

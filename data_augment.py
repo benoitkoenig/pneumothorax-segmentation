@@ -40,3 +40,10 @@ def get_many_images_from_one(image, mask):
     all_masks = get_sized_image(mask) + get_sized_image(mirror_mask)
 
     return all_images, all_masks
+
+def random_data_augment(image, technique):
+    if (technique == "none"):
+        return image
+    else: # TODO: insert data_augmentation techniques
+        print("random_data_augment called with invalid technique. Exiting immediately")
+        exit(-1)
