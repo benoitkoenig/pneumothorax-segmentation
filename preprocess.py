@@ -24,9 +24,11 @@ def get_dicom_data(file_path):
     return pydicom.dcmread(file_path)
 
 cached_csv = []
-def get_true_mask(name):
-    "Takes the name of the image as input and returns the mask mapping as a numpy matrix of shape (image_size, image_size) and values 0-1"
-    # Warning hidden side effect: get-true-mask loads the csv on the first run and caches it
+def get_raw_masks(name):
+    """
+        Returns a list of the masks as they appear in train-rle.csv. Masks '-1' are filtered out\n
+        Note side-effect: loads the csv on the first run and caches it
+    """
     global cached_csv
 
     # The csv data is stored in a cache. This way, the csv is read only once
@@ -45,6 +47,20 @@ def get_true_mask(name):
     # Remove the -1 from images with no mask
     if (raw_masks[0] == " -1"):
         raw_masks = []
+
+    return raw_masks
+
+def get_image_label(name):
+    "Returns 1 if there is a pneumothorax, 0 otherwise. Based on data in train-rle.csv"
+    raw_masks = get_raw_masks(name)
+    if len(raw_masks) == 0:
+        return 0
+    return 1
+
+def get_true_mask(name):
+    "Takes the name of the image as input and returns the mask mapping as a numpy matrix of shape (image_size, image_size) and values 0-1"
+
+    raw_masks = get_raw_masks(name)
 
     # Format the masks to an exploitable format
     masks = []

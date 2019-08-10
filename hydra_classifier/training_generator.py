@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
-from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask, format_pixel_array_for_tf
+from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_image_label, format_pixel_array_for_tf
 
 def training_generator(graph):
     """
@@ -13,8 +13,7 @@ def training_generator(graph):
         with graph.as_default():
             dicom_data = get_dicom_data(filepath)
             image = format_pixel_array_for_tf(dicom_data.pixel_array)
-            true_mask = get_true_mask(filename)
-            is_there_pneumothorax = np.max(true_mask) # 1 if pneumothorax, 0 otherwise
+            is_there_pneumothorax = get_image_label(filename)
             is_there_pneumothorax = [[1 - is_there_pneumothorax, is_there_pneumothorax]]
             is_there_pneumothorax = tf.convert_to_tensor(is_there_pneumothorax, dtype=tf.float32)
         yield ([image], [is_there_pneumothorax])
