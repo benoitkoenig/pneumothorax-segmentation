@@ -5,6 +5,7 @@ import pydicom
 import tensorflow as tf
 
 from pneumothorax_segmentation.constants import image_size, tf_image_size, folder_path
+from pneumothorax_segmentation.data_augment import apply_random_data_augment
 
 # Documentation for reading dicom files at https://pydicom.github.io/pydicom/stable/viewing_images.html#using-pydicom-with-matplotlib
 
@@ -86,10 +87,15 @@ def get_true_mask(name):
 
     return mask_mapping
 
-def format_pixel_array_for_tf(pixel_array):
-    "Inputs pixel_array as they are stroed in the dicom file. Outputs a tensor ready to go through the models"
+def format_pixel_array_for_tf(pixel_array, apply_data_augment_technique=None):
+    """
+        Inputs pixel_array as they are stroed in the dicom file. Outputs a tensor ready to go through the models\n
+        apply_data_augment_technique can be used to apply data augmentation. See apply_random_data_augment for values
+    """
     image = tf.convert_to_tensor(pixel_array, dtype=tf.float32)
     image = tf.reshape(image, (1, image_size, image_size, 1))
+    if (apply_data_augment_technique != None):
+        image = apply_random_data_augment(image, apply_data_augment_technique)
     image = tf.image.resize(image, (tf_image_size, tf_image_size))
     image = image / 255.
     image = tf.image.grayscale_to_rgb(image)

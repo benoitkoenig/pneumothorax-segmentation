@@ -30,11 +30,11 @@ for param in sys.argv:
 
 data_augment_technique = None
 for param in sys.argv:
-    if param in ["none"]: # TODO: add more data augmentation techniques
+    if param in ["none", "resize", "flip_rotate", "filter"]:
         data_augment_technique = param
 
 if (backbone_name == None) | (data_augment_technique == None):
-    print("Usage: python train_hydra_body.py [resnet50|densenet169] [none]")
+    print("Usage: python train_hydra_body.py [resnet50|densenet169] [none|resize|flip_rotate|filter]")
     exit(-1)
 
 train_hydra_head(backbone_name, data_augment_technique)

@@ -10,7 +10,7 @@ Author: Benoît Koenig
 
 - Training the hydra classifier's body: python -m hydra_classifier.train_hydra_body [resnet50|densenet169]
 
-- Training the hydra classifier's body: python -m hydra_classifier.train_hydra_body [resnet50|densenet169] [none]
+- Training the hydra classifier's heads: python -m hydra_classifier.train_hydra_head [resnet50|densenet169] [none|resize|flip_rotate|filter]
 
 - Exporting final predictions to results.csv: python -m export_predictions
 

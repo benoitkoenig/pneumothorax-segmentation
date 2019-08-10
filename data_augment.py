@@ -1,49 +1,89 @@
-import numpy as np
+import random
 import tensorflow as tf
 
 from constants import image_size
 
 bigger_size = int(1.25 * image_size)
+padding_for_big = 128
+
+def get_tall_image(image):
+    "Zooms on the image along the y-axis only"
+    tall_image = tf.image.resize(image, (bigger_size, image_size))
+    tall_image = tf.image.crop_to_bounding_box(tall_image, padding_for_big, 0, image_size, image_size)
+    return tall_image
+
+def get_large_image(image):
+    "Zooms on the image along the x-axis only"
+    large_image = tf.image.resize(image, (image_size, bigger_size))
+    large_image = tf.image.crop_to_bounding_box(large_image, 0, padding_for_big, image_size, image_size)
+    return large_image
+
+def get_zoomed_image(image):
+    "Zooms on the image"
+    zoom_image = tf.image.resize(image, (bigger_size, bigger_size))
+    zoom_image = tf.image.crop_to_bounding_box(zoom_image, padding_for_big, padding_for_big, image_size, image_size)
+    return zoom_image
 
 def get_mirror_image(image):
-    "Takes a np matrix as input and flips it vertically"
-    return np.flip(image, axis=1)
+    "Flip the image left-right"
+    mirror_image = tf.image.flip_left_right(image)
+    return mirror_image
 
-def get_sized_image(input_image):
-    "Take an np matrix of shape (image_size, image_size as input and return a list of matrices of the same shape (original image included in the return)"
-    image = np.reshape(input_image, (image_size, image_size, 1)) # Reshape needs to be done so tf resize is possible
-    image = tf.convert_to_tensor(image) # I use tf methods for resizing, even though the output is still numpy
+def rotate_and_zoom_image(image):
+    "Rotates the image. This action is combined with zooming to avoid black edges. Angle is determined at random"
+    angle = random.random() * .2 - .1
+    rotated_image = tf.contrib.image.rotate(image, angle)
+    big_rotated_image = get_zoomed_image(rotated_image) # Zooming is necessary to avoid black edges
+    return big_rotated_image
 
-    tall_image = tf.image.resize(image, (bigger_size, image_size))
-    tall_image = tf.image.crop_to_bounding_box(tall_image, 128, 0, 1024, 1024)
-    tall_image = tall_image.numpy()
-    tall_image = np.reshape(tall_image, (image_size, image_size))
+def smooth_image(image):
+    "Smoothes the image"
+    smoothed_image = tf.image.resize(image, (256, 256))
+    smoothed_image = tf.image.resize(smoothed_image, (image_size, image_size))
+    return smoothed_image
 
-    large_image = tf.image.resize(image, (image_size, bigger_size))
-    large_image = tf.image.crop_to_bounding_box(large_image, 0, 128, 1024, 1024)
-    large_image = large_image.numpy()
-    large_image = np.reshape(large_image, (image_size, image_size))
+def change_image_brightness(image):
+    "Darkens or brightens the image at random"
+    delta = random.random() * .4 + .6
+    if (random.randint(0, 1) == 1):
+        dark_image = image * delta
+        return dark_image
+    else:
+        bright_image = 255. - delta * (255. - image)
+        return bright_image
 
-    big_image = tf.image.resize(image, (bigger_size, bigger_size))
-    big_image = tf.image.crop_to_bounding_box(big_image, 128, 128, 1024, 1024)
-    big_image = big_image.numpy()
-    big_image = np.reshape(big_image, (image_size, image_size))
-
-    return [input_image, tall_image, large_image, big_image]
-
-def get_many_images_from_one(image, mask):
-    "Takes an image and a mask as np matrices of shape (image_size, image_size) and returns a list of matrices of the same shape, ready to use"
-    mirror_image = np.flip(image, axis=1)
-    mirror_mask = np.flip(mask, axis=1)
-
-    all_images = get_sized_image(image) + get_sized_image(mirror_image)
-    all_masks = get_sized_image(mask) + get_sized_image(mirror_mask)
-
-    return all_images, all_masks
-
-def random_data_augment(image, technique):
+def apply_random_data_augment(image, technique):
+    """
+        Apply a data augmentation technique picked at random among a certain pool of techniques. These pools are:\n
+        'none': No data augmentation applied\n
+        'resize': zooms along the x-axis, the y-axis, or both\n
+        'flip_rotate': flips the image left-right with .5 prob and apply a slight random rotation\n
+        'filter': smoothes or changes the image's brightness\n
+        Image inputs are tensor of dim 3 or 4. Outputs are the same shape as inputs
+    """
     if (technique == "none"):
         return image
-    else: # TODO: insert data_augmentation techniques
+    elif (technique == "resize"):
+        rand = random.randint(0, 3)
+        if (rand == 0):
+            return image
+        if (rand == 1):
+            return get_tall_image(image)
+        if (rand == 2):
+            return get_large_image(image)
+        return get_zoomed_image(image)
+    elif (technique == "flip_rotate"):
+        rand = random.randint(0, 1)
+        if (rand == 0):
+            return rotate_and_zoom_image(image)
+        else:
+            mirror_image = get_mirror_image(image)
+            return rotate_and_zoom_image(mirror_image)
+    elif (technique == "filter"):
+        if random.randint(0, 1) == 1:
+            return smooth_image(image)
+        else:
+            return change_image_brightness(image)
+    else:
         print("random_data_augment called with invalid technique. Exiting immediately")
         exit(-1)
