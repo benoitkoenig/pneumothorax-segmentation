@@ -1,7 +1,7 @@
 import random
 import tensorflow as tf
 
-from constants import image_size
+from pneumothorax_segmentation.constants import image_size
 
 bigger_size = int(1.25 * image_size)
 padding_for_big = 128
