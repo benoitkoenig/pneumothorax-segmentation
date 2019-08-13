@@ -5,8 +5,7 @@ import numpy as np
 import sys
 import tensorflow as tf
 
-from pneumothorax_segmentation.constants import image_size, tf_image_size, folder_path
-from pneumothorax_segmentation.postprocess import build_predicted_mask
+from pneumothorax_segmentation.constants import image_size
 from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask, format_pixel_array_for_tf
 from pneumothorax_segmentation.segmentation.predict import get_prediction
 
@@ -35,9 +34,14 @@ def show_prediction(folder, index):
     plt.subplot(1, 2, 2)
     image = format_pixel_array_for_tf(dicom_data.pixel_array)
     predicted_logits = get_prediction(image)
-    predictions = build_predicted_mask(predicted_logits)
-    pixels = 255 - (255 - pixels) * (1 - predictions)
-    plt.imshow(pixels)
+
+    predictions = tf.convert_to_tensor(predicted_logits, dtype=tf.float32)
+    predictions = tf.image.resize(predicted_logits, (image_size, image_size))
+    predictions = tf.Session().run(predictions)
+    predictions = np.apply_along_axis(lambda l: l[0], axis=3, arr=predictions)
+    predictions = np.reshape(predictions, (image_size, image_size))
+
+    plt.imshow(predictions)
 
     plt.show()
 
