@@ -2,12 +2,15 @@ import csv
 import numpy as np
 import os
 import pydicom
+from segmentation_models.backbones import get_preprocessing
 import tensorflow as tf
 
 from pneumothorax_segmentation.constants import image_size, tf_image_size, folder_path
 from pneumothorax_segmentation.data_augment import apply_random_data_augment
 
 # Documentation for reading dicom files at https://pydicom.github.io/pydicom/stable/viewing_images.html#using-pydicom-with-matplotlib
+
+preprocess_input = get_preprocessing("resnet34")
 
 def get_all_images_list(folder):
     "Load all images filenames in folder. Returns a list of (filepath, filename)"
@@ -97,6 +100,6 @@ def format_pixel_array_for_tf(pixel_array, apply_data_augment_technique=None):
     if (apply_data_augment_technique != None):
         image = apply_random_data_augment(image, apply_data_augment_technique)
     image = tf.image.resize(image, (tf_image_size, tf_image_size))
-    image = image / 255.
     image = tf.image.grayscale_to_rgb(image)
+    image = preprocess_input(image)
     return image
