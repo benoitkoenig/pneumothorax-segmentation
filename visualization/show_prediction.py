@@ -36,7 +36,7 @@ def show_prediction(folder, index):
     predicted_logits = get_prediction(image)
 
     predictions = tf.convert_to_tensor(predicted_logits, dtype=tf.float32)
-    predictions = tf.image.resize(predicted_logits, (image_size, image_size))
+    predictions = tf.image.resize(predicted_logits, (image_size, image_size), align_corners=True)
     predictions = tf.Session().run(predictions)
     predictions = np.apply_along_axis(lambda l: l[0], axis=3, arr=predictions)
     predictions = np.reshape(predictions, (image_size, image_size))

@@ -99,7 +99,8 @@ def format_pixel_array_for_tf(pixel_array, apply_data_augment_technique=None):
     image = tf.reshape(image, (1, image_size, image_size, 1))
     if (apply_data_augment_technique != None):
         image = apply_random_data_augment(image, apply_data_augment_technique)
-    image = tf.image.resize(image, (tf_image_size, tf_image_size))
+    # tf.image.resize behaves weirdly with the default method when reducing size. AREA method makes more sense in our case, thought the default bilinear method makes more sense when making an image bigger
+    image = tf.image.resize(image, (tf_image_size, tf_image_size), align_corners=True, method=tf.image.ResizeMethod.AREA)
     image = tf.image.grayscale_to_rgb(image)
     image = preprocess_input(image)
     return image
