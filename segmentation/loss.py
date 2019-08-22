@@ -9,7 +9,10 @@ from pneumothorax_segmentation.segmentation.params import mask_factor, non_mask_
 def get_bce_loss(true_mask, predicted_probs):
     "Calculates the weighted bce loss"
     loss = K.binary_crossentropy(true_mask, predicted_probs)
-    loss = mask_factor * K.mean(true_mask * loss) + non_mask_factor * K.mean((1 - true_mask) * loss)
+    anti_mask = 1 - true_mask
+    true_mask_sum = K.sum(true_mask) + K.epsilon()
+    anti_mask_sum = K.sum(anti_mask) + K.epsilon()
+    loss = mask_factor * K.sum(true_mask * loss) / true_mask_sum + non_mask_factor * K.sum(anti_mask * loss) / anti_mask_sum
     return loss
 
 def get_dice_loss(true_mask, predicted_probs):
@@ -30,4 +33,4 @@ def get_dice_loss(true_mask, predicted_probs):
 def calculate_loss(true_mask, predicted_probs):
     "Calculates the loss. true_mask and predicted_probs are expected to have the same shapes, with values between 0 and 1"
     resized_predicted_probs = tf.image.resize(predicted_probs, (image_size, image_size), align_corners=True)
-    return get_dice_loss(true_mask, resized_predicted_probs)
+    return get_bce_loss(true_mask, resized_predicted_probs)
