@@ -1,16 +1,14 @@
 import numpy as np
-import tensorflow as tf
 
-from pneumothorax_segmentation.constants import image_size
+from pneumothorax_segmentation.params import pred_threshold
 
-def build_predicted_mask(predicted_logits):
-    "Inputs the predicted logits as a list of shape (1, tf_image_size, tf_image_size, 1). Outputs a np matrix of shape (image_size, image_size)"
-    predictions = tf.convert_to_tensor(predicted_logits, dtype=tf.float32)
-    predictions = tf.image.resize(predicted_logits, (image_size, image_size), align_corners=True)
-    predictions = tf.Session().run(predictions)
-    predictions = np.apply_along_axis(lambda l: int(l[0] > .5), axis=3, arr=predictions)
-    predictions = np.reshape(predictions, (image_size, image_size))
-    return predictions
+def apply_threshold_to_preds(preds, threshold=pred_threshold):
+    """
+    Applies a given threshold to preds, returning a numpy array of same shape as preds,
+    containing 0 or one depending if the value is or not greater than the threshold\n
+    If threshold is unspecified, the value from params/pred_threshold is used
+    """
+    return (preds < threshold).astype(int)
 
 def export_mask_to_kaggle_format(input_mask):
     """

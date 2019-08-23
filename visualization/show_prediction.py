@@ -6,7 +6,7 @@ import sys
 import tensorflow as tf
 
 from pneumothorax_segmentation.constants import image_size
-from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask, format_pixel_array_for_tf
+from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask
 from pneumothorax_segmentation.segmentation.predict import get_prediction
 
 def show_prediction(folder, index):
@@ -17,8 +17,8 @@ def show_prediction(folder, index):
         print("Index %s out of range. Max index is %s" % (index, len(images_list) - 1))
         exit(-1)
 
-    file_path, filename = images_list[index]
-    dicom_data = get_dicom_data(file_path)
+    filepath, filename = images_list[index]
+    dicom_data = get_dicom_data(filepath)
 
     # Display the final image
     fig = plt.figure(figsize=(18, 12))
@@ -32,14 +32,7 @@ def show_prediction(folder, index):
     plt.imshow(pixels)
 
     plt.subplot(1, 2, 2)
-    image = format_pixel_array_for_tf(dicom_data.pixel_array)
-    predicted_logits = get_prediction(image)
-
-    predictions = tf.convert_to_tensor(predicted_logits, dtype=tf.float32)
-    predictions = tf.image.resize(predicted_logits, (image_size, image_size), align_corners=True)
-    predictions = tf.Session().run(predictions)
-    predictions = np.apply_along_axis(lambda l: l[0], axis=3, arr=predictions)
-    predictions = np.reshape(predictions, (image_size, image_size))
+    predictions = get_prediction(filepath)
 
     plt.imshow(predictions)
 
