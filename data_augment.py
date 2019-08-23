@@ -8,19 +8,19 @@ padding_for_big = 128
 
 def get_tall_image(image):
     "Zooms on the image along the y-axis only"
-    tall_image = tf.image.resize(image, (bigger_size, image_size))
+    tall_image = tf.image.resize(image, (bigger_size, image_size), align_corners=True, method=tf.image.ResizeMethod.AREA)
     tall_image = tf.image.crop_to_bounding_box(tall_image, padding_for_big, 0, image_size, image_size)
     return tall_image
 
 def get_large_image(image):
     "Zooms on the image along the x-axis only"
-    large_image = tf.image.resize(image, (image_size, bigger_size))
+    large_image = tf.image.resize(image, (image_size, bigger_size), align_corners=True, method=tf.image.ResizeMethod.AREA)
     large_image = tf.image.crop_to_bounding_box(large_image, 0, padding_for_big, image_size, image_size)
     return large_image
 
 def get_zoomed_image(image):
     "Zooms on the image"
-    zoom_image = tf.image.resize(image, (bigger_size, bigger_size))
+    zoom_image = tf.image.resize(image, (bigger_size, bigger_size), align_corners=True, method=tf.image.ResizeMethod.AREA)
     zoom_image = tf.image.crop_to_bounding_box(zoom_image, padding_for_big, padding_for_big, image_size, image_size)
     return zoom_image
 
@@ -38,8 +38,8 @@ def rotate_and_zoom_image(image):
 
 def smooth_image(image):
     "Smoothes the image"
-    smoothed_image = tf.image.resize(image, (256, 256))
-    smoothed_image = tf.image.resize(smoothed_image, (image_size, image_size))
+    smoothed_image = tf.image.resize(image, (256, 256), align_corners=True, method=tf.image.ResizeMethod.AREA)
+    smoothed_image = tf.image.resize(smoothed_image, (image_size, image_size), align_corners=True)
     return smoothed_image
 
 def change_image_brightness(image):
