@@ -1,20 +1,11 @@
 import numpy as np
 
-from pneumothorax_segmentation.params import segmentation_threshold, classification_threshold
-
-def apply_threshold_to_preds(preds, threshold=segmentation_threshold):
-    """
-    Applies a given threshold to preds, returning a numpy array of same shape as preds,
-    containing 0 or 1 depending if the value is greater than the threshold\n
-    If threshold is unspecified, the value from params/segmentation_threshold is used
-    """
+def apply_threshold_to_preds(preds, threshold):
+    "Returns a numpy array of same shape as preds, containing 1 where the value is greater than the threshold, 0 elsewhere"
     return (preds > threshold).astype(int)
 
-def interpret_ensemble_classification_predictions(preds, threshold=classification_threshold):
-    """
-    Given a list of probabilities, returns 0 or 1 depending wether the average is above the given threshold
-    If threshold is unspecified, the value from params/classification_threshold is used
-    """
+def interpret_ensemble_classification_predictions(preds, threshold):
+    "Given a list of probabilities, returns 1 if the average is above the given threshold, 0 otherwise"
     return int(np.mean(preds) > threshold)
 
 def export_mask_to_kaggle_format(input_mask):

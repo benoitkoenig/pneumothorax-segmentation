@@ -10,19 +10,14 @@ class TestPostprocessMethods(unittest.TestCase):
         output = apply_threshold_to_preds(input, .5)
         self.assertListEqual(output.tolist(), [0, 0, 1, 1])
 
-    def test_apply_threshold_to_preds_with_default_param(self):
-        input = np.array([1e-7, 1e-7, 1 - 1e-7, 1 - 1e-7])
-        output = apply_threshold_to_preds(input)
-        self.assertListEqual(output.tolist(), [0, 0, 1, 1])
-
-    def test_interpret_ensemble_classification_predictions(self):
+    def test_interpret_ensemble_classification_predictions_with_low_probs(self):
         input = np.array([0.2, 0.4, 0.6])
         output = interpret_ensemble_classification_predictions(input, .5)
         self.assertEqual(output, 0)
 
-    def test_interpret_ensemble_classification_predictions_with_default_param(self):
-        input = np.array([1e-7, 1 - 1e-7, 1 - 1e-7])
-        output = interpret_ensemble_classification_predictions(input)
+    def test_interpret_ensemble_classification_predictions_with_high_probs(self):
+        input = np.array([.4, .6, .8])
+        output = interpret_ensemble_classification_predictions(input, .5)
         self.assertEqual(output, 1)
 
     def test_export_mask_to_kaggle_format(self):
