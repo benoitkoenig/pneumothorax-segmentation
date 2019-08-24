@@ -31,6 +31,9 @@ def get_dice_loss(true_mask, predicted_probs):
     return loss
 
 def calculate_loss(true_mask, predicted_probs):
-    "Calculates the loss. true_mask and predicted_probs are expected to have the same shapes, with values between 0 and 1"
+    """
+    Calculates the loss. true_mask should be of shape (image_size, image_size, ?) or
+    (?, image_size, image_size, ?). predicted_probs will be resized to image_size x image_size
+    """
     resized_predicted_probs = tf.image.resize(predicted_probs, (image_size, image_size), align_corners=True)
     return get_bce_loss(true_mask, resized_predicted_probs)
