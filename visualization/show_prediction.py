@@ -7,7 +7,7 @@ import tensorflow as tf
 
 from pneumothorax_segmentation.constants import image_size
 from pneumothorax_segmentation.preprocess import get_all_images_list, get_dicom_data, get_true_mask
-from pneumothorax_segmentation.segmentation.predict import get_prediction
+from pneumothorax_segmentation.segmentation.predict import get_segmentation_prediction
 
 def show_prediction(folder, index):
     images_list = get_all_images_list(folder)
@@ -32,7 +32,7 @@ def show_prediction(folder, index):
     plt.imshow(pixels)
 
     plt.subplot(1, 2, 2)
-    predictions = get_prediction(filepath)
+    predictions = get_segmentation_prediction(filepath)
 
     plt.imshow(predictions)
 

@@ -18,10 +18,10 @@ for body_name in ["resnet50", "densenet169"]:
 #         model = load_model(filepath, compile=False)
 #         all_models.append(model)
 
-def get_prediction(filepath):
+def get_classification_prediction(filepath):
     """
     Returns the prediction as a numpy array of shape (image_size, image_size) for a given filepath\n
-    Please note that due a bug loading the models, get_prediction currenly uses the body models.
+    Please note that due a bug loading the models, get_classification_prediction currenly uses the body models.
     Please fix the bug and use the head models of the hydra
     """
     dicom_data = get_dicom_data(filepath)

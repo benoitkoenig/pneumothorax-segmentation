@@ -4,7 +4,7 @@ import tensorflow as tf
 from pneumothorax_segmentation.constants import image_size
 from pneumothorax_segmentation.preprocess import get_all_images_list, get_true_mask, get_image_label
 from pneumothorax_segmentation.postprocess import apply_threshold_to_preds
-from pneumothorax_segmentation.segmentation.predict import get_prediction
+from pneumothorax_segmentation.segmentation.predict import get_segmentation_prediction
 
 thresholds = [.1, .5, .9]
 
@@ -20,7 +20,7 @@ def evaluate():
     for (fileindex, (filepath, filename)) in enumerate(images_list):
         label = get_image_label(filename)
         true_mask = get_true_mask(filename)
-        predictions = get_prediction(filepath)
+        predictions = get_segmentation_prediction(filepath)
         for i in range(3):
             predicted_mask = apply_threshold_to_preds(predictions, thresholds[i])
             if (label == 1):

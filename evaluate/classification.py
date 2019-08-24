@@ -4,7 +4,7 @@ import tensorflow as tf
 from pneumothorax_segmentation.constants import image_size
 from pneumothorax_segmentation.preprocess import get_all_images_list, get_image_label
 from pneumothorax_segmentation.postprocess import interpret_ensemble_classification_predictions
-from pneumothorax_segmentation.hydra_classifier.predict import get_prediction
+from pneumothorax_segmentation.hydra_classifier.predict import get_classification_prediction
 
 thresholds = [.3, .5, .7]
 
@@ -23,7 +23,7 @@ def evaluate():
     guesses = np.empty((3, 2, 0)).tolist()
     for (fileindex, (filepath, filename)) in enumerate(images_list):
         label = get_image_label(filename)
-        predictions = get_prediction(filepath)
+        predictions = get_classification_prediction(filepath)
         for i in range(3):
             predicted_label = interpret_ensemble_classification_predictions(predictions, thresholds[i])
             guesses[i][label].append(predicted_label)
