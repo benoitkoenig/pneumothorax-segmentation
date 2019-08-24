@@ -16,7 +16,7 @@ def get_bce_loss(true_mask, predicted_probs):
     return loss
 
 def get_dice_loss(true_mask, predicted_probs):
-    "Calculates the weighted dice loss"
+    "Calculates the weighted dice loss. TODO: this loss function does not work properly. Please fix"
     labels = 2 * true_mask - 1
     predictions = 2 * predicted_probs - 1
 
