@@ -1,9 +1,19 @@
 import numpy as np
 import unittest
 
-from pneumothorax_segmentation.postprocess import export_mask_to_kaggle_format
+from pneumothorax_segmentation.postprocess import apply_threshold_to_preds, export_mask_to_kaggle_format
 
 class TestPostprocessMethods(unittest.TestCase):
+    def test_apply_threshold_to_preds(self):
+        input = np.array([0.2, 0.4, 0.6, 0.8])
+        output = apply_threshold_to_preds(input, .5)
+        self.assertListEqual(output.tolist(), [0, 0, 1, 1])
+
+    def test_apply_threshold_to_preds_with_default_param(self):
+        input = np.array([1e-7, 1e-7, 1 - 1e-7, 1 - 1e-7])
+        output = apply_threshold_to_preds(input)
+        self.assertListEqual(output.tolist(), [0, 0, 1, 1])
+
     def test_export_mask_to_kaggle_format(self):
         input_matrix = np.array([
             [0, 0, 0, 0, 0],

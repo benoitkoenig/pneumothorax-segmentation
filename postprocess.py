@@ -5,10 +5,10 @@ from pneumothorax_segmentation.params import pred_threshold
 def apply_threshold_to_preds(preds, threshold=pred_threshold):
     """
     Applies a given threshold to preds, returning a numpy array of same shape as preds,
-    containing 0 or one depending if the value is or not greater than the threshold\n
+    containing 0 or 1 depending if the value is greater than the threshold\n
     If threshold is unspecified, the value from params/pred_threshold is used
     """
-    return (preds < threshold).astype(int)
+    return (preds > threshold).astype(int)
 
 def export_mask_to_kaggle_format(input_mask):
     """
