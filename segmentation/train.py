@@ -9,11 +9,12 @@ from pneumothorax_segmentation.constants import folder_path, image_size
 from pneumothorax_segmentation.params import tf_image_size
 from pneumothorax_segmentation.segmentation.loss import calculate_loss
 from pneumothorax_segmentation.segmentation.params import learning_rate, steps_per_epoch, epochs
-from pneumothorax_segmentation.segmentation.training_generator import training_generator
+from pneumothorax_segmentation.segmentation.training_generator import get_training_generator
 
 file_path = folder_path + "/weights/unet.hdf5"
 
 def train():
+    training_generator = get_training_generator()
     for epoch_index in range(epochs):
         # Why iterating over epochs instead of passing them correctly as a parameter of fit_generator?
         # The problem is that I need to clean the graph regularly, or I will get a memory error
