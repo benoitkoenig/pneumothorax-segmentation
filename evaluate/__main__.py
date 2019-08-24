@@ -1,7 +1,6 @@
 import numpy as np
 import tensorflow as tf
 
-from pneumothorax_segmentation.constants import image_size
 from pneumothorax_segmentation.preprocess import get_all_images_list, get_true_mask, get_image_label
 from pneumothorax_segmentation.postprocess import apply_threshold_to_preds
 from pneumothorax_segmentation.segmentation.predict import get_prediction

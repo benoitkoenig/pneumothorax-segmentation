@@ -3,7 +3,7 @@ from keras.applications.densenet import DenseNet169
 from keras.layers import Dense, Dropout, GlobalAveragePooling2D
 from keras.models import Model
 
-from pneumothorax_segmentation.constants import tf_image_size
+from pneumothorax_segmentation.params import tf_image_size
 
 def get_classifier(backbone_name):
     "Returns a classifier model. backbone_name must be one of 'resnet50', 'densenet169'"

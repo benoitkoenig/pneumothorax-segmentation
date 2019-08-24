@@ -5,8 +5,9 @@ import pydicom
 from segmentation_models.backbones import get_preprocessing
 import tensorflow as tf
 
-from pneumothorax_segmentation.constants import image_size, tf_image_size, folder_path
+from pneumothorax_segmentation.constants import image_size, folder_path
 from pneumothorax_segmentation.data_augment import apply_random_data_augment
+from pneumothorax_segmentation.params import tf_image_size
 
 # Documentation for reading dicom files at https://pydicom.github.io/pydicom/stable/viewing_images.html#using-pydicom-with-matplotlib
 

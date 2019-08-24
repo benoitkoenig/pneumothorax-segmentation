@@ -2,7 +2,8 @@ import numpy as np
 import tensorflow as tf
 import unittest
 
-from pneumothorax_segmentation.constants import image_size, tf_image_size
+from pneumothorax_segmentation.constants import image_size
+from pneumothorax_segmentation.params import tf_image_size
 from pneumothorax_segmentation.preprocess import format_pixel_array_for_tf
 
 tf.compat.v1.enable_eager_execution() # Remove when switching to tf2

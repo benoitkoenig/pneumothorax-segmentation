@@ -5,7 +5,8 @@ from keras.optimizers import Adam
 from segmentation_models import Unet
 import tensorflow as tf
 
-from pneumothorax_segmentation.constants import folder_path, image_size, tf_image_size
+from pneumothorax_segmentation.constants import folder_path, image_size
+from pneumothorax_segmentation.params import tf_image_size
 from pneumothorax_segmentation.segmentation.loss import calculate_loss
 from pneumothorax_segmentation.segmentation.params import learning_rate, steps_per_epoch, epochs
 from pneumothorax_segmentation.segmentation.training_generator import training_generator
