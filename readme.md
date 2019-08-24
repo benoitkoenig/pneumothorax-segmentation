@@ -6,6 +6,8 @@ Author: Benoît Koenig
 
 ### Usage:
 
+- Run the whole training process from scratch: whole_training_from_scratch.sh
+
 - Training the segmentation model: python -m segmentation.train
 
 - Training the hydra classifier's body: python -m hydra_classifier.train_hydra_body [resnet50|densenet169]
