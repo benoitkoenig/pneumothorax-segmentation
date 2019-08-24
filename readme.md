@@ -31,3 +31,4 @@ Author: Benoît Koenig
 #### Note
 
 tensorflow-gpu is not included in requirements.txt as it is not always relevant. To use the GPU, install tensorflow-gpu via "pip install tensorflow-gpu"
+Currently, the heads of the hydra_classifier are not used for predictions due to a bug. To investigate
