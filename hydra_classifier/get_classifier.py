@@ -25,7 +25,7 @@ def get_classifier(backbone_name):
 
     x = backbone.output
     x = GlobalAveragePooling2D()(x)
-    x = Dropout(0.7)(x)
+    x = Dropout(0.5)(x)
     predictions = Dense(2, activation='softmax')(x)
     classifier = Model(inputs=backbone.input, outputs=predictions)
 
