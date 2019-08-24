@@ -1,7 +1,7 @@
 import numpy as np
 import unittest
 
-from pneumothorax_segmentation.postprocess import apply_threshold_to_preds, export_mask_to_kaggle_format
+from pneumothorax_segmentation.postprocess import apply_threshold_to_preds, interpret_ensemble_classification_predictions, export_mask_to_kaggle_format
 from pneumothorax_segmentation.preprocess import get_all_images_list, get_raw_masks, get_true_mask
 
 class TestPostprocessMethods(unittest.TestCase):
@@ -14,6 +14,16 @@ class TestPostprocessMethods(unittest.TestCase):
         input = np.array([1e-7, 1e-7, 1 - 1e-7, 1 - 1e-7])
         output = apply_threshold_to_preds(input)
         self.assertListEqual(output.tolist(), [0, 0, 1, 1])
+
+    def test_interpret_ensemble_classification_predictions(self):
+        input = np.array([0.2, 0.4, 0.6])
+        output = interpret_ensemble_classification_predictions(input, .5)
+        self.assertEqual(output, 0)
+
+    def test_interpret_ensemble_classification_predictions_with_default_param(self):
+        input = np.array([1e-7, 1 - 1e-7, 1 - 1e-7])
+        output = interpret_ensemble_classification_predictions(input)
+        self.assertEqual(output, 1)
 
     def test_export_mask_to_kaggle_format(self):
         input_matrix = np.array([

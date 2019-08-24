@@ -14,7 +14,9 @@ Author: Benoît Koenig
 
 - Training the hydra classifier's heads: python -m hydra_classifier.train_hydra_head [resnet50|densenet169] [none|resize|flip_rotate|filter]
 
-- Evaluating the current model (shows the dice coefficient from the training data): python -m evaluate
+- Evaluating segmentation: python -m evaluate.segmentation
+
+- Evaluating classification: python -m evaluate.classification
 
 - Exporting final predictions to results.csv: python -m export_predictions
 
