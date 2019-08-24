@@ -2,6 +2,7 @@ import numpy as np
 import unittest
 
 from pneumothorax_segmentation.postprocess import apply_threshold_to_preds, export_mask_to_kaggle_format
+from pneumothorax_segmentation.preprocess import get_all_images_list, get_raw_masks, get_true_mask
 
 class TestPostprocessMethods(unittest.TestCase):
     def test_apply_threshold_to_preds(self):
@@ -43,6 +44,13 @@ class TestPostprocessMethods(unittest.TestCase):
         ])
         output = export_mask_to_kaggle_format(input_matrix)
         self.assertEqual(output, "0 3 14 3")
+
+    def test_compose_get_true_mask_with_export_mask_yields_raw_mask(self):
+        (_, filename) = get_all_images_list("train")[5] # This picture has exactly one mask
+        raw_mask = get_raw_masks(filename)
+        true_mask = get_true_mask(filename)
+        output = " " + export_mask_to_kaggle_format(true_mask)
+        self.assertEqual(output, raw_mask[0])
 
 if __name__ == "__main__":
     unittest.main()

@@ -11,10 +11,7 @@ def apply_threshold_to_preds(preds, threshold=pred_threshold):
     return (preds > threshold).astype(int)
 
 def export_mask_to_kaggle_format(input_mask):
-    """
-        Inputs is the mask as a numpy array. Outputs the mask ready for submission\n
-        Note: The predicted logits returned by the model can be converted to the input format via the build_predicted_mask method
-    """
+    "Inputs is the mask as a numpy array. Outputs the mask ready for submission"
     mask = np.transpose(input_mask, (1, 0))
     mask = np.reshape(mask, (-1))
     mask = mask.tolist()
