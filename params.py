@@ -1,3 +1,3 @@
-segmentation_threshold=.5
-classification_threshold=.01 # Models not yet actually trained
+segmentation_threshold=.65
+classification_threshold=.5
 tf_image_size = 1024

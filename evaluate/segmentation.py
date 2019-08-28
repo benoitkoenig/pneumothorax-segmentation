@@ -6,7 +6,7 @@ from pneumothorax_segmentation.preprocess import get_all_images_list, get_true_m
 from pneumothorax_segmentation.postprocess import apply_threshold_to_preds
 from pneumothorax_segmentation.segmentation.predict import get_segmentation_prediction
 
-thresholds = [.1, .5, .9]
+thresholds = [.6, .65, .7]
 
 def calculate_dice_coefficient(X, Y):
     "X and Y must be numpy arrays of same shape and values 0 or 1. Returns the dice coefficient"

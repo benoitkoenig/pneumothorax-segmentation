@@ -6,7 +6,7 @@ from pneumothorax_segmentation.preprocess import get_all_images_list, get_image_
 from pneumothorax_segmentation.postprocess import interpret_ensemble_classification_predictions
 from pneumothorax_segmentation.hydra_classifier.predict import get_classification_prediction
 
-thresholds = [.3, .5, .7]
+thresholds = [.4, .5, .6]
 
 def get_ratio(input, reverse=False):
     "Input: a list of zeros and ones. Outputs the ratio as a percentage. reverse=True will return the percentage for 1 - ratio"
