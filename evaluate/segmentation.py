@@ -15,13 +15,13 @@ def calculate_dice_coefficient(X, Y):
 def evaluate():
     images_list = get_all_images_list("train")
     len_images_list = len(images_list)
-    dices_coefficients = [[], [], []]
-    wrong_diagnosis_areas = [[], [], []]
+    dices_coefficients = np.empty((len(thresholds), 0)).tolist()
+    wrong_diagnosis_areas = np.empty((len(thresholds), 0)).tolist()
     for (fileindex, (filepath, filename)) in enumerate(images_list):
         label = get_image_label(filename)
         true_mask = get_true_mask(filename)
         predictions = get_segmentation_prediction(filepath)
-        for i in range(3):
+        for i in range(len(thresholds)):
             predicted_mask = apply_threshold_to_preds(predictions, thresholds[i])
             if (label == 1):
                 dice_coef = calculate_dice_coefficient(predicted_mask, true_mask)
@@ -31,7 +31,7 @@ def evaluate():
                 wrong_diagnosis_areas[i].append(area)
 
         print("\n%s/%s Avg dice coef and wrong diagnosis area for threshold" % (fileindex, len_images_list))
-        for i in range(3):
+        for i in range(len(thresholds)):
             print("%s\t%s\t%s" % (thresholds[i], np.mean(dices_coefficients[i]), np.mean(wrong_diagnosis_areas[i])))
 
 evaluate()

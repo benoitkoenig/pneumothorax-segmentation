@@ -4,7 +4,7 @@ from pneumothorax_segmentation.constants import folder_path
 from pneumothorax_segmentation.preprocess import get_dicom_data, format_pixel_array_for_tf
 
 all_models = []
-for body_name in ["resnet50", "densenet169"]:
+for body_name in ["resnet50"]: # "densenet169" not included because I did not have the time to train it
     filepath = folder_path + "/weights/hydra_%s_body.hdf5" % body_name
     model = load_model(filepath, compile=False)
     all_models.append(model)
