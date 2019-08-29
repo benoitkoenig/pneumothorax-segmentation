@@ -10,7 +10,7 @@ from pneumothorax_segmentation.segmentation.predict import get_segmentation_pred
 def export_predictions():
     "Makes predictions for the test folder and saves them as csv"
     clear_outputs_csv()
-    images_list = get_all_images_list("test")
+    images_list = get_all_images_list("stage-2")
 
     for (filepath, filename) in images_list:
         classification_predictions = get_classification_prediction(filepath)
